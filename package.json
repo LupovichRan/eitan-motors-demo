@@ -7,7 +7,8 @@
     "serve": "python -m http.server 8080",
     "test:a11y:layout": "node tests/accessibility-matrix.cjs",
     "test:a11y:actions": "node tests/accessibility-actions.cjs",
-    "test:a11y:audit": "node tests/accessibility-audit.cjs"
+    "test:a11y:audit": "node tests/accessibility-audit.cjs",
+    "test:design": "node tests/design-smoke.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1",

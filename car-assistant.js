@@ -112,7 +112,7 @@
       if (prefs.brands.length || prefs.excludeBrands.length) why.push('עומד בתנאי היצרן');
       if (prefs.maxKm != null) why.push('עומד במגבלת הקילומטראז׳');
       if (prefs.maxHand != null) why.push('עומד במגבלת היד');
-      el.innerHTML = `<div class="assistant-result-top"><img src="${esc(c.images[0] || 'placeholder.svg')}" alt="תמונת אווירה להמחשה בלבד"><div><h3>${esc(c.brand)} ${esc(c.name)}</h3><div class="result-price">${fmt(c.price)} ₪</div><div class="result-meta">${c.year} · ${fmt(c.km)} ק״מ · יד ${c.hand} · ${esc(c.fuel)}</div></div></div><div class="result-reason">${esc(why.join(' · ') || 'אפשרות מהמלאי בהתאם להעדפות הכלליות שבחרת')}</div><div class="assistant-result-actions"><button type="button" data-chat-car="${c.id}" aria-label="פרטים על ${esc(c.brand)} ${esc(c.name)}">לפרטי הרכב ←</button></div>`;
+      el.innerHTML = `<div class="assistant-result-top"><img src="${esc(Inventory.displayImage(c.images[0]))}" alt="תמונת אווירה להמחשה בלבד"><div><h3>${esc(c.brand)} ${esc(c.name)}</h3><div class="result-price">${fmt(c.price)} ₪</div><div class="result-meta">${c.year} · ${fmt(c.km)} ק״מ · יד ${c.hand} · ${esc(c.fuel)}</div></div></div><div class="result-reason">${esc(why.join(' · ') || 'אפשרות מהמלאי בהתאם להעדפות הכלליות שבחרת')}</div><div class="assistant-result-actions"><button type="button" data-chat-car="${c.id}" aria-label="פרטים על ${esc(c.brand)} ${esc(c.name)}">לפרטי הרכב ←</button></div>`;
       el.querySelector('button').onclick = () => openVehicle(c.id);
       log.append(el);
     });
@@ -161,11 +161,11 @@
     else { prefs = {...prefs,...selections[label]}; next(); }
     focusAction();
   }
-  function reset() {
-    prefs = {}; stage = 'budget'; log.replaceChildren(); lastResultsStart = null;
+  function reset(initialUse) {
+    prefs = initialUse ? {uses:[initialUse]} : {}; stage = 'budget'; log.replaceChildren(); lastResultsStart = null;
     snapshot = JSON.stringify(stock());
     $('assistant-current-search').hidden = true; $('assistant-current-search').textContent = '';
-    message('היי, אני מכוניתי 🚘\nנעזור לך לצמצם את החיפוש מתוך המלאי. החיפוש מתבצע בכפתורי בחירה בלבד, בלי צורך להקליד.'); next();
+    message('היי, אני מכוניתי 🚘\nנעזור לך לצמצם את החיפוש מתוך המלאי. החיפוש מתבצע בכפתורי בחירה בלבד, בלי צורך להקליד.'); if(initialUse){const labels={city:'בעיקר בעיר',family:'מקום לכל המשפחה',long:'אוהבים את הדרך'};message('הכיוון שבחרתם: '+labels[initialUse],true)} next();
   }
   function fitMobileViewport() {
     const mobile = window.innerWidth <= 560;
@@ -188,11 +188,13 @@
   window.addEventListener('resize', scheduleViewportFit);
   window.visualViewport?.addEventListener('resize', scheduleViewportFit);
   window.visualViewport?.addEventListener('scroll', scheduleViewportFit);
-  function open() {
+  function open(event) {
     opener = document.activeElement;
     fitMobileViewport();
     dialog.showModal(); $('assistant-launcher').setAttribute('aria-expanded', 'true');
-    if (!started) { reset(); started = true; }
+    const initialUse = event?.currentTarget?.dataset.assistantUse;
+    if (['city','family','long'].includes(initialUse)) { reset(initialUse); started = true; }
+    else if (!started) { reset(); started = true; }
     else if (stage === 'results' && snapshot !== JSON.stringify(stock())) results();
     if (stage === 'results' && lastResultsStart?.isConnected) scrollTo(lastResultsStart); else bottom();
     focusAction();

@@ -78,3 +78,4 @@ html[data-viewport-narrow] .accessibility-toggle{inline-size:52px;block-size:52p
 .hero h1{font-size:3.5rem}
 .a11y-contrast .upload-label:focus-within .upload-action{outline-color:#ffec75}
 @media(max-width:560px){.hero h1{font-size:2.5rem}}
+.a11y-contrast :where(b,em,i,li,dt,dd,figcaption,blockquote,cite,summary){color:#fff!important;background-color:#080808!important;border-color:#bdbdbd!important}

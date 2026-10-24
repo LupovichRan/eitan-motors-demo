@@ -78,4 +78,17 @@ async function validateImportedImages(rows){
   const bitmap=await decodeImage(new Blob([bytes],{type:match[1]}));bitmap.close();
  }
 }
-window.Inventory={KEY,load,save,reset,clean,validate,imageURL,prepareUpload,validateImportedImages,esc,MAX_JSON};})();
+const bundledImages = Object.freeze({
+ 'photo-1621007947382-bb3c3994e3fb':'vehicle-01.jpg',
+ 'photo-1533473359331-0135ef1b58bf':'vehicle-02.jpg',
+ 'photo-1552519507-da3b142c6e3d':'vehicle-03.jpg',
+ 'photo-1494905998402-395d579af36f':'vehicle-04.jpg',
+ 'photo-1503376780353-7e6692767b70':'vehicle-05.jpg',
+ 'photo-1503736334956-4c8f8e92946d':'vehicle-06.jpg'
+});
+function displayImage(source){
+ if(!source)return 'placeholder.svg';
+ const match=/^https:\/\/images\.unsplash\.com\/(photo-[a-z0-9-]+)(?:\?|$)/i.exec(source);
+ return match&&Object.hasOwn(bundledImages,match[1])?bundledImages[match[1]]:source;
+}
+window.Inventory={KEY,load,save,reset,clean,validate,imageURL,prepareUpload,validateImportedImages,displayImage,esc,MAX_JSON};})();
