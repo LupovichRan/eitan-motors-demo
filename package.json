@@ -1,0 +1,16 @@
+{
+  "name": "eitan-motors-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "RTL car dealership demo with accessibility regression checks",
+  "scripts": {
+    "serve": "python -m http.server 8080",
+    "test:a11y:layout": "node tests/accessibility-matrix.cjs",
+    "test:a11y:actions": "node tests/accessibility-actions.cjs",
+    "test:a11y:audit": "node tests/accessibility-audit.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1",
+    "axe-core": "4.10.3"
+  }
+}

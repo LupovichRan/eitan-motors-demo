@@ -14,9 +14,9 @@
     maxHand: ['עד איזו יד לחפש?', ['יד ראשונה', 'עד יד שנייה', 'ללא הגבלת יד']]
   };
   function stock() { return Inventory.load(); }
-  function bottom() { log.scrollTop = log.scrollHeight; }
+  function bottom() { const latest=log.lastElementChild; if(latest)scrollTo(latest); }
   function scrollTo(el) {
-    log.scrollTop += el.getBoundingClientRect().top - log.getBoundingClientRect().top - 14;
+    dialog.scrollTop += el.getBoundingClientRect().top - dialog.getBoundingClientRect().top - dialog.querySelector('.assistant-header').getBoundingClientRect().height - 16;
   }
   function message(text, user = false) {
     const el = document.createElement('div');
